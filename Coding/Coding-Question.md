@@ -3080,5 +3080,206 @@ WHERE rank_val <= 3;
 * **Partitioning vs Grouping:** `PARTITION BY` divides the result set into partitions to apply the window function, but it keeps all the original rows. `GROUP BY` aggregates rows into a single summary row.
 
 ---
+**Question 35: Count Binary Strings without "000" or "111" (Matrix Exponentiation)**
+
+**Observations:**
+
+* You are asked to find the number of valid binary strings of length $n$ that do not contain "000" or "111".
+* **The Constraint is the Biggest Clue:** The problem states $n \le 10^{18}$. A standard Dynamic Programming approach takes $O(N)$ time, which will cause a Time Limit Exceeded (TLE) error for $10^{18}$. Whenever you see $10^{18}$ combined with a counting/sequence problem, the required time complexity is $O(\log n)$. This is the universal signature of **Matrix Exponentiation**.
+* **Finding the Pattern:** Let's define valid strings by their suffix. A valid string can end in either one identical character (like `...01` or `...10`) or two identical characters (like `...100` or `...011`).
+* Let $A_n$ be the number of strings ending in 1 identical character. To form this, you must append the *opposite* character to any valid string of length $n-1$. So, $A_n = A_{n-1} + B_{n-1}$.
+* Let $B_n$ be the number of strings ending in 2 identical characters. You can only form this by appending the *same* character to a string that previously ended in 1 identical character. So, $B_n = A_{n-1}$.
+
+
+* Substituting $B_{n-1}$ into the first equation gives:
+
+$$A_n = A_{n-1} + A_{n-2}$$
+
+
+
+This is the exact formula for the **Fibonacci sequence**!
+* By tracing the first few values ($n=1, 2, 3, 4$), the total number of valid strings $T_n$ strictly follows $T_n = 2 \times F_{n+1}$ (where $F_1=1, F_2=1, F_3=2, F_4=3, F_5=5$).
+* Because the result grows exponentially, such problems universally expect you to return the answer modulo $10^9 + 7$ to prevent integer overflow.
+
+**Approach:**
+
+1. We need to compute the $(n+1)$-th Fibonacci number in $O(\log n)$ time.
+2. We can represent the Fibonacci recurrence relation as a matrix multiplication:
+
+$$\begin{pmatrix} F_{n+1} \\ F_n \end{pmatrix} = \begin{pmatrix} 1 & 1 \\ 1 & 0 \end{pmatrix}^n \begin{pmatrix} F_1 \\ F_0 \end{pmatrix}$$
+
+
+3. Let the transformation matrix be $M = \begin{pmatrix} 1 & 1 \\ 1 & 0 \end{pmatrix}$.
+4. If we calculate $M^n$, the top-left element of the resulting matrix will be exactly $F_{n+1}$.
+5. We can calculate $M^n$ using **Binary Exponentiation** (similar to calculating $x^y$ by squaring the base and halving the exponent), which takes $O(\log n)$ time.
+6. Multiply the top-left element by 2, apply modulo $10^9 + 7$, and return the result.
+
+**Code(in simple C++):**
+
+```cpp
+#include <iostream>
+#include <vector>
+
+using namespace std;
+
+const int MOD = 1e9 + 7;
+typedef vector<vector<long long>> Matrix;
+
+// Helper function to multiply two 2x2 matrices
+Matrix multiply(Matrix A, Matrix B) {
+    Matrix C(2, vector<long long>(2, 0));
+    for (int i = 0; i < 2; i++) {
+        for (int j = 0; j < 2; j++) {
+            for (int k = 0; k < 2; k++) {
+                C[i][j] = (C[i][j] + A[i][k] * B[k][j]) % MOD;
+            }
+        }
+    }
+    return C;
+}
+
+// Helper for binary matrix exponentiation in O(log N)
+Matrix matrixPower(Matrix base, long long exp) {
+    // Identity matrix
+    Matrix res = {{1, 0}, {0, 1}}; 
+    
+    while (exp > 0) {
+        // If exponent is odd, multiply result by base
+        if (exp % 2 == 1) {
+            res = multiply(res, base);
+        }
+        // Square the base and halve the exponent
+        base = multiply(base, base);
+        exp /= 2;
+    }
+    return res;
+}
+
+int countValidStrings(long long n) {
+    if (n == 0) return 0;
+    
+    // Transformation matrix M
+    Matrix T = {{1, 1}, {1, 0}};
+    
+    // Calculate T^n
+    Matrix Tn = matrixPower(T, n);
+    
+    // Total strings = 2 * F_{n+1}
+    // F_{n+1} is stored at the top-left (Tn[0][0])
+    long long ans = (2 * Tn[0][0]) % MOD;
+    
+    return ans;
+}
+
+int main() {
+    long long n = 4;
+    // For n=4, answer should be 10 (as proven in your example)
+    cout << "Valid strings for n=" << n << ": " 
+         << countValidStrings(n) << endl;
+         
+    return 0;
+}
+
+```
+
+**Things to remember for solving same kind of problems(in short):**
+
+* **Read the Constraints First:** The single biggest takeaway here is $N \le 10^{18}$. If you write a standard $O(N)$ dynamic programming loop for this, you will fail the hidden test cases. Big constraints demand Binary Search or Matrix Exponentiation.
+* **Combinatorics hide Fibonacci:** A massive number of "count the binary strings without consecutive X" problems secretly boil down to the Fibonacci sequence or the Tribonacci sequence. Try solving for $n=1, 2, 3, 4$ on paper first to spot the sequence!
+* **The Identity Matrix:** When doing binary exponentiation on matrices, always initialize your result matrix as the Identity Matrix `{{1, 0}, {0, 1}}` just like you would initialize a regular integer to `1` when calculating standard powers.
+
+---
+**Question 36: Total Count of Zeros or Ones in Valid Binary Strings**
+
+**Observations:**
+
+* You are given the same conditions as the previous problem: find the total number of `0`s (or `1`s) present across all valid binary strings of length `n` that do not contain "000" or "111". The constraint is massive: $n \le 10^{18}$.
+* **Symmetry is the key:** The constraints "no 000" and "no 111" are perfectly symmetric. This means for every valid string that exists (e.g., `0100`), its exact bitwise complement (`1011`) is also a valid string.
+* Because every valid string has a paired opposite, the total number of `0`s across all valid strings combined must be exactly equal to the total number of `1`s.
+* In the previous question, we established that the total number of valid strings is $2 \times F_{n+1}$ (where $F$ is the Fibonacci sequence).
+* The total number of characters across *all* valid strings is simply `n` multiplied by the total number of strings: $n \times (2 \times F_{n+1})$.
+* Since exactly half of these characters are `1`s (and the other half are `0`s), the total number of `1`s is $(n \times 2 \times F_{n+1}) / 2$, which perfectly simplifies to $n \times F_{n+1}$.
+
+**Approach:**
+
+1. Just like the previous problem, use Matrix Exponentiation to compute the $(n+1)$-th Fibonacci number in $O(\log n)$ time to handle the $10^{18}$ constraint without a Time Limit Exceeded (TLE) error.
+2. The transformation matrix $M$ is `{{1, 1}, {1, 0}}`.
+3. Calculate $M^n$ using binary exponentiation. The value at the top-left of the resulting matrix (`res[0][0]`) will be $F_{n+1}$.
+4. Multiply this $F_{n+1}$ value by $n$.
+5. Because the numbers get astronomically large, apply the modulo $10^9 + 7$ operation at every single multiplication step, including the final multiplication by $n$.
+
+**Code(in simple C++):**
+
+```cpp
+#include <iostream>
+#include <vector>
+
+using namespace std;
+
+const int MOD = 1e9 + 7;
+typedef vector<vector<long long>> Matrix;
+
+// Helper function to multiply two 2x2 matrices
+Matrix multiply(Matrix A, Matrix B) {
+    Matrix C(2, vector<long long>(2, 0));
+    for (int i = 0; i < 2; i++) {
+        for (int j = 0; j < 2; j++) {
+            for (int k = 0; k < 2; k++) {
+                C[i][j] = (C[i][j] + A[i][k] * B[k][j]) % MOD;
+            }
+        }
+    }
+    return C;
+}
+
+// Helper for binary matrix exponentiation in O(log N)
+Matrix matrixPower(Matrix base, long long exp) {
+    Matrix res = {{1, 0}, {0, 1}}; // Identity matrix
+    
+    while (exp > 0) {
+        if (exp % 2 == 1) {
+            res = multiply(res, base);
+        }
+        base = multiply(base, base);
+        exp /= 2;
+    }
+    return res;
+}
+
+int countTotalOnesOrZeros(long long n) {
+    if (n == 0) return 0;
+    
+    Matrix T = {{1, 1}, {1, 0}};
+    Matrix Tn = matrixPower(T, n);
+    
+    // F_{n+1} is stored at the top-left (Tn[0][0])
+    long long Fn_plus_1 = Tn[0][0];
+    
+    // Formula: Total 1s = n * F_{n+1}
+    // Apply modulo to n first to prevent overflow during multiply
+    long long safe_n = n % MOD;
+    long long ans = (safe_n * Fn_plus_1) % MOD;
+    
+    return ans;
+}
+
+int main() {
+    long long n = 4;
+    // Valid strings for n=4 is 10. 
+    // Total 1s (or 0s) across them is 4 * 5 = 20.
+    cout << "Total 0s (or 1s) for n=" << n << ": " 
+         << countTotalOnesOrZeros(n) << endl;
+         
+    return 0;
+}
+
+```
+
+**Things to remember for solving same kind of problems(in short):**
+
+* **The Symmetry Shortcut:** Before writing complex code to count specific characters or properties, always check if the problem's rules are symmetric. If you can swap '0' and '1' without breaking the rules, you can usually divide the total complexity by half.
+* **Modulo Arithmetic Safety:** When multiplying two large values (like `n` and `Fn_plus_1`), always take the modulo of `n` *before* the multiplication (`(n % MOD) * Fn_plus_1`). If `n` is $10^{18}$, multiplying it before modulo will instantly overflow a 64-bit integer.
+
+---
 
 **Congratulations!** We have successfully made it through all 34 custom-tailored questions. We've covered everything from arrays, strings, dynamic programming, and binary search to advanced graph theory, trees, monotonic stacks, and advanced SQL window functions.
