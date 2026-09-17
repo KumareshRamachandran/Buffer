@@ -1068,3 +1068,97 @@ Your resume shows **1000+ solved problems and a 1455 Codeforces Specialist ratin
 
 That one habit makes your reasoning much easier for the interviewer to evaluate—and your interview notice explicitly says that **demonstrating your approach is as significant as the solution itself**.
 
+
+These are very likely to come up. The key is to make the answers **specific to you**, rather than giving generic lines about Infosys.
+
+## 1. “Why Infosys?”
+
+A strong answer for your profile:
+
+“I’m interested in Infosys because it gives me an opportunity to work on large-scale technology projects while continuing to strengthen my problem-solving and software engineering skills. My background is strongly focused on DSA, C++, backend development and real-world project experience, including my work with Kafka and PostgreSQL at HPE. I believe Infosys would give me the right environment to apply these skills, learn from experienced teams, and grow as a software engineer.”
+
+### If they ask: “Why Infosys specifically?”
+
+Don't say:
+
+> “Because Infosys is a very big company and has a good reputation.”
+
+That is too generic.
+
+Instead, connect **your profile → role → company**:
+
+> “My interests are strongly aligned with software engineering and problem solving, and the role gives me an opportunity to work on challenging technical problems while developing industry-level engineering skills.”
+
+---
+
+# 2. “Why DSE/SP role?”
+
+This is actually easier for you because your resume supports it very well.
+
+“I’m particularly interested in the DSE/SP role because it is closely aligned with my strengths in problem solving, algorithms and software development. I have solved 1000+ competitive programming problems and have hands-on experience building backend and full-stack applications. I want a role where I can use these skills on real-world engineering problems while continuing to improve technically.”
+
+---
+
+# 3. “Why should we give you Specialist Programmer rather than a regular software role?”
+
+This may come up because you have a strong competitive-programming profile.
+
+A good answer:
+
+“I believe my problem-solving background makes me a good fit for a technically intensive role. I have a strong foundation in DSA and competitive programming, and I also have practical development experience from projects and my HPE experience. I’m interested in solving complex problems rather than limiting myself to a narrow area, so the Specialist Programmer role particularly interests me.”
+
+---
+
+# 4. “Why DSE/SP when you already have HPE experience?”
+
+This is a possible follow-up because your resume contains HPE experience.
+
+Say:
+
+> “My HPE experience gave me exposure to real-world engineering practices such as C++, Kafka, concurrency and database optimization. It actually strengthened my interest in software engineering and made me want to work on technically challenging problems at a larger scale.”
+
+---
+
+# 5. “What if we offer you DSE instead of SP?”
+
+**Do not sound like you will reject DSE.**
+
+Say:
+
+> “I’m particularly interested in SP because of its technical focus, but I would be happy to take up a DSE opportunity as well. My priority is to work in a role where I can contribute, learn and grow technically.”
+
+This is safer than saying **“I only want SP.”**
+
+---
+
+# 6. Very important: don't memorize the answer word-for-word
+
+Use this structure:
+
+### Why Infosys?
+
+**Company opportunity → your technical interests → learning/growth**
+
+### Why SP/DSE?
+
+**Your DSA strength → development experience → technical challenge**
+
+For **you**, the strongest evidence to mention is:
+
+* **1000+ competitive-programming problems**
+* **1455 Specialist on Codeforces**
+* **C++/Kafka/payment authorization work at HPE**
+* **React/Node/PostgreSQL/MongoDB projects**   
+
+## One thing I would change in your delivery
+
+Don't make it sound like:
+
+> “I want SP because it's a higher package/status.”
+
+Instead make it sound like:
+
+> **“My existing skills align naturally with the technical requirements of the role, and I want an environment where I can apply and deepen those skills.”**
+
+That sounds much more convincing in an interview.
+
